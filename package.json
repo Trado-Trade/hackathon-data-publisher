@@ -20,7 +20,8 @@
     "axios": "^1.5.0",
     "dotenv": "^16.3.1",
     "mqtt": "^5.0.5",
-    "pg": "^8.11.3"
+    "pg": "^8.16.0",
+    "protobufjs": "^7.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.6.0",

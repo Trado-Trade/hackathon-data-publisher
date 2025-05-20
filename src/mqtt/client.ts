@@ -17,5 +17,20 @@ export function createClient(): mqtt.MqttClient {
     reconnectPeriod: 1000,
   };
 
+  const client = mqtt.connect(connectUrl, options);
+
+  client.on("connect", () => {
+    console.log("Connected to MQTT broker");
+  });
+
+  client.on("reconnect", () => {
+    console.log("Reconnecting to MQTT...");
+  });
+
+  client.on("error", (err) => {
+    console.error("MQTT Error:", err);
+    client.end();
+  });
+
   return mqtt.connect(connectUrl, options);
 }

@@ -8,7 +8,7 @@ import * as utils from "../utils";
 const indexLtpMap = new Map<string, number>();
 const atmStrikeMap = new Map<string, number>();
 
-export function processMessage(
+export async function processMessage(
   topic: string,
   message: Buffer,
   client: mqtt.MqttClient
@@ -34,6 +34,7 @@ export function processMessage(
       }
     } catch (err) {
       // Try decoding as MarketDataBatch
+      console.log(err);
       try {
         decoded = marketdata.marketdata.MarketDataBatch.decode(
           new Uint8Array(message)
@@ -45,6 +46,7 @@ export function processMessage(
         }
       } catch (batchErr) {
         // Try decoding as JSON
+        console.log(batchErr);
         try {
           decoded = JSON.parse(message.toString());
           if (decoded && typeof decoded.ltp === "number") {
@@ -55,6 +57,7 @@ export function processMessage(
             "Failed to decode message as protobuf or JSON for topic:",
             topic
           );
+          return;
         }
       }
     }
@@ -62,6 +65,22 @@ export function processMessage(
     // ltpValues now contains the decoded LTP values
     for (const ltp of ltpValues) {
       // Process the LTP value
+      const parts = topic.split("_");
+      const index = parts[0];
+      const strike = parseInt(parts[1]);
+      const type = parts[2];
+
+      if (!indexLtpMap.has(index)) {
+        indexLtpMap.set(index, ltp);
+
+        const atm = Math.round(ltp / 100) * 100;
+        atmStrikeMap.set(index, atm);
+        console.log(`${index} ATM calculated: ${atm}`);
+
+        // Subscribe to ATM ±5 options
+        await subscriptionManager.subscribeToAtmOptions(client, index, atm);
+      }
+      db.saveToDatabase(topic, ltp, index, type, strike);
     }
   } catch (error) {
     console.error("Error processing message:", error);
