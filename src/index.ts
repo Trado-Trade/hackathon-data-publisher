@@ -55,6 +55,4 @@ async function start() {
   }
 }
 
-return 0;
-
 start();
