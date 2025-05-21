@@ -1,0 +1,5 @@
+"topic_id","topic_name","index_name","type","strike"
+1,"index/NIFTY","NIFTY",NULL,NULL
+2,"index/BANKNIFTY","BANKNIFTY",NULL,NULL
+3,"index/MIDCPNIFTY","MIDCPNIFTY",NULL,NULL
+4,"index/FINNIFTY","FINNIFTY",NULL,NULL

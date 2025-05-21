@@ -1,4 +1,6 @@
 // Configuration for the application
+import dotenv from "dotenv";
+dotenv.config();
 export const config = {
   mqtt: {
     host: "emqx.trado.trade",
@@ -8,11 +10,11 @@ export const config = {
     clientId: `hackathon-client-${Math.random().toString(16).substring(2, 8)}`,
   },
   db: {
-    host: process.env.PG_HOST || "localhost",
-    port: parseInt(process.env.PG_PORT || "5432"),
-    user: process.env.PG_USER || "postgres",
-    password: process.env.PG_PASSWORD || "postgres",
-    database: process.env.PG_DATABASE || "market_data",
+    host: process.env.PGHOST || "localhost",
+    port: parseInt(process.env.PGPORT || "5432"),
+    user: process.env.PGUSER || "postgres",
+    password: process.env.PGPASSWORD || "postgres",
+    database: process.env.PGDATABASE || "market_data",
   },
   app: {
     indexPrefix: process.env.INDEX_PREFIX || "index",
