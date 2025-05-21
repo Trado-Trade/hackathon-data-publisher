@@ -125,6 +125,10 @@ export async function flushBatch() {
     await client.query("BEGIN");
 
     for (const item of batch) {
+      if (item.type && !Number.isFinite(item.strike)) {
+        console.warn(`Skipping invalid strike topic: ${item.topic}`);
+        continue;
+      }
       const topicId = await getTopicId(
         item.topic,
         item.indexName,
